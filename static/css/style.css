@@ -1,0 +1,20 @@
+body {
+    background-color: #f4f6f9;
+}
+
+.sidebar {
+    width: 250px;
+    background: #1f2937;
+    height: 100vh;
+}
+
+.menu {
+    display: block;
+    color: white;
+    padding: 10px;
+    text-decoration: none;
+}
+
+.menu:hover {
+    background: #374151;
+}
