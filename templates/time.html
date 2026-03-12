@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Time Tracking</h2>
+
+<form method="POST">
+
+<select name="employee">
+
+{% for e in employees %}
+<option value="{{e.id}}">{{e.name}}</option>
+{% endfor %}
+
+</select>
+
+<select name="project">
+
+{% for p in projects %}
+<option value="{{p.id}}">{{p.name}}</option>
+{% endfor %}
+
+</select>
+
+<input name="hours" placeholder="Hours Worked">
+
+<button class="btn btn-primary">Save</button>
+
+</form>
+
+{% endblock %}
+
+@app.route("/expenses", methods=["GET","POST"])
+def expenses():
+
+    conn = get_db()
+
+    projects = conn.execute("SELECT * FROM projects").fetchall()
+
+    if request.method == "POST":
+
+        project = request.form["project"]
+        desc = request.form["description"]
+        amount = request.form["amount"]
+
+        conn.execute(
+        "INSERT INTO expenses(project_id,description,amount) VALUES(?,?,?)",
+        (project,desc,amount)
+        )
+
+        conn.commit()
+
+    conn.close()
+
+    return render_template("expenses.html",projects=projects)

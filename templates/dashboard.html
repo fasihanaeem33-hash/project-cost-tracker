@@ -1,37 +1,114 @@
 {% extends "base.html" %}
+
 {% block content %}
 
-<h2>Project Cost & Profit Dashboard</h2>
+<h2>Enterprise Dashboard</h2>
+
+<div class="row">
+
+<div class="col-md-3">
+<div class="card card-stat">
+<h6>Total Budget</h6>
+<h3>${{total_budget}}</h3>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="card card-stat">
+<h6>Total Cost</h6>
+<h3>${{total_cost}}</h3>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="card card-stat">
+<h6>Total Profit</h6>
+<h3>${{total_profit}}</h3>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="card card-stat">
+<h6>Active Projects</h6>
+<h3>{{projects|length}}</h3>
+</div>
+</div>
+
+</div>
+
+
+<div class="card mt-4 p-4">
+
+<h4>Profit Analytics</h4>
+
+<canvas id="profitChart"></canvas>
+
+</div>
+
 
 <table class="table table-bordered mt-4">
+
 <thead class="table-dark">
+
 <tr>
-    <th>Project</th>
-    <th>Client</th>
-    <th>Budget</th>
-    <th>Employee Cost</th>
-    <th>Expenses</th>
-    <th>Total Cost</th>
-    <th>Profit</th>
-    <th>Margin %</th>
+<th>Project</th>
+<th>Client</th>
+<th>Budget</th>
+<th>Cost</th>
+<th>Profit</th>
+<th>Margin</th>
 </tr>
+
 </thead>
+
 <tbody>
+
 {% for p in projects %}
+
 <tr>
-    <td>{{ p.name }}</td>
-    <td>{{ p.client }}</td>
-    <td>${{ p.budget }}</td>
-    <td>${{ p.employee_cost }}</td>
-    <td>${{ p.expenses }}</td>
-    <td>${{ p.total_cost }}</td>
-    <td class="{{ 'text-success' if p.profit >=0 else 'text-danger' }}">
-        ${{ p.profit }}
-    </td>
-    <td>{{ p.margin }}%</td>
+
+<td>{{p.name}}</td>
+<td>{{p.client}}</td>
+<td>${{p.budget}}</td>
+<td>${{p.cost}}</td>
+<td class="{{'text-success' if p.profit>=0 else 'text-danger'}}">
+${{p.profit}}
+</td>
+<td>{{p.margin}}%</td>
+
 </tr>
+
 {% endfor %}
+
 </tbody>
+
 </table>
+
+
+<script>
+
+var ctx = document.getElementById('profitChart');
+
+var chart = new Chart(ctx, {
+
+type: 'bar',
+
+data: {
+
+labels: [{% for p in projects %}"{{p.name}}",{% endfor %}],
+
+datasets: [{
+
+label: 'Project Profit',
+
+data: [{% for p in projects %}{{p.profit}},{% endfor %}]
+
+}]
+
+}
+
+});
+
+</script>
 
 {% endblock %}
