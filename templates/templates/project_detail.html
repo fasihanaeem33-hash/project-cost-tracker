@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Project Detail</h2>
+
+<h4>{{project.name}}</h4>
+
+<table class="table table-bordered">
+
+<tr>
+<th>Client</th>
+<td>{{project.client}}</td>
+</tr>
+
+<tr>
+<th>Project Budget</th>
+<td>${{project.budget}}</td>
+</tr>
+
+<tr>
+<th>Employee Cost</th>
+<td>${{emp_cost}}</td>
+</tr>
+
+<tr>
+<th>Expenses</th>
+<td>${{expenses}}</td>
+</tr>
+
+<tr>
+<th>Total Cost</th>
+<td>${{total_cost}}</td>
+</tr>
+
+<tr>
+<th>Profit</th>
+<td>{{profit}}</td>
+</tr>
+
+<tr>
+<th>Profit Margin</th>
+<td>{{margin}}%</td>
+</tr>
+
+</table>
+
+{% endblock %}

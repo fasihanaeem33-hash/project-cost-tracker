@@ -340,7 +340,48 @@ def invoice(project_id):
 
     return send_file(file, as_attachment=True)
 
+@app.route("/project/<int:project_id>")
+def project_detail(project_id):
 
+    conn = get_db()
+    cur = conn.cursor()
+
+    project = cur.execute(
+        "SELECT * FROM projects WHERE id=?",
+        (project_id,)
+    ).fetchone()
+
+    emp_cost = cur.execute("""
+    SELECT SUM(hours * rate)
+    FROM time_entries
+    JOIN employees ON employees.id = time_entries.employee_id
+    WHERE project_id=?
+    """, (project_id,)).fetchone()[0] or 0
+
+    expenses = cur.execute("""
+    SELECT SUM(amount)
+    FROM expenses
+    WHERE project_id=?
+    """, (project_id,)).fetchone()[0] or 0
+
+    total_cost = emp_cost + expenses
+    profit = project["budget"] - total_cost
+
+    margin = 0
+    if project["budget"] > 0:
+        margin = (profit / project["budget"]) * 100
+
+    conn.close()
+
+    return render_template(
+        "project_detail.html",
+        project=project,
+        emp_cost=emp_cost,
+        expenses=expenses,
+        total_cost=total_cost,
+        profit=profit,
+        margin=round(margin,2)
+    )
 # ---------------- RUN APP ----------------
 
 if __name__ == "__main__":
